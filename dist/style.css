@@ -8,7 +8,23 @@ body {
 body {
 	background-color: black;
 	display: flex;
-	flex-direction: row;
+    flex-direction: row;
+    justify-content: center;
+}
+
+@media (max-width: 730px) {
+    body {
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .gameboard {
+        width: 160px;
+        height: 160px;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 10px;
+    }
 }
 
 .gameboard {
@@ -16,12 +32,12 @@ body {
 	height: 320px;
 	display: flex;
 	flex-wrap: wrap;
-	margin: 20px;
+    margin: 20px;
 }
 
 .cell {
-	width: 30px;
-	height: 30px;
+	width: 9.375%;
+	height: 9.375%;
 	border: 1px solid rgb(0, 235, 39);
 }
 
