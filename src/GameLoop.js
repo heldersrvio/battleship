@@ -54,6 +54,8 @@ const GameLoop = (againstComputer, player1Name, player2Name) => {
 	gameboard2.placeShip(ship19, 85, 85);
 	gameboard2.placeShip(ship20, 97, 99);
 
+	DOM.renderTitle();
+
 	DOM.renderBoard('gameboard-two', gameboard2, gameboard1, true, true, () =>
 		gameboard1.receiveAttack(player2.randomMove(gameboard1))
 	);

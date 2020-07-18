@@ -2,7 +2,17 @@ const DOM = ((doc) => {
 	const body = doc.querySelector('body');
 
 	const clearBoard = (id) => {
-		body.removeChild(doc.getElementById(id));
+		const container = document.getElementById('gameboards-container');
+		container.removeChild(doc.getElementById(id));
+	};
+
+	const renderTitle = () => {
+		const title = doc.createElement('div');
+		title.id = 'title';
+		const h1 = doc.createElement('h1');
+		h1.textContent = 'Battleship';
+		title.appendChild(h1);
+		body.appendChild(title);
 	};
 
 	const renderBoard = (
@@ -13,6 +23,9 @@ const DOM = ((doc) => {
 		turn,
 		computersTurn
 	) => {
+		const gameboardsContainer =
+			doc.getElementById('gameboards-container') || doc.createElement('div');
+		gameboardsContainer.id = 'gameboards-container';
 		const boardContainer = doc.createElement('div');
 		boardContainer.classList.add('gameboard');
 		boardContainer.id = id;
@@ -59,12 +72,14 @@ const DOM = ((doc) => {
 			}
 			boardContainer.appendChild(square);
 		});
-		body.appendChild(boardContainer);
+		gameboardsContainer.appendChild(boardContainer);
+		body.appendChild(gameboardsContainer);
 	};
 
 	return {
 		clearBoard,
 		renderBoard,
+		renderTitle,
 	};
 })(document);
 
