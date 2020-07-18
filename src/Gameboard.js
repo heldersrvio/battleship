@@ -40,10 +40,51 @@ const Gameboard = () => {
 			position + 11,
 		].forEach((slot) => {
 			if (slot >= 0 && slot < 100) {
-				vicinity.push(slot);
+				if (position % 10 !== 9 && position % 10 !== 0) {
+					vicinity.push(slot);
+				} else if (position % 10 === 9) {
+					if (slot % 10 !== 0) {
+						vicinity.push(slot);
+					}
+				} else {
+					if (slot % 10 !== 9) {
+						vicinity.push(slot);
+					}
+				}
 			}
 		});
 		return vicinity;
+	};
+
+	const updateAfterSunkShip = (ship) => {
+		const positionsCopy = positions.slice(0);
+		positions.forEach((position, index) => {
+			if (position.ship === ship) {
+				getVicinity(index).forEach((slot) => {
+					if (
+						getPosition(slot).ship === null &&
+						getPosition(slot).status === 'available'
+					) {
+						positionsCopy[slot] = {
+							ship: null,
+							index: null,
+							status: 'unavailable',
+						};
+					}
+				});
+			}
+		});
+		positions = positionsCopy;
+	};
+
+	const updateAfterAttack = (status, position) => {
+		const positionsCopy = positions.slice(0);
+		positionsCopy[position] = {
+			ship: positionsCopy[position].ship,
+			index: positionsCopy[position].index,
+			status: status,
+		};
+		positions = positionsCopy;
 	};
 
 	const placeShip = (ship, startPosition, endPosition) => {
@@ -82,30 +123,15 @@ const Gameboard = () => {
 	};
 
 	const receiveAttack = (position) => {
-		const positionsCopy = positions.slice(0);
 		if (getPosition(position).status === 'available') {
-			const status = positionsCopy[position].ship === null ? 'missed' : 'hit';
-			positionsCopy[position] = {
-				ship: positionsCopy[position].ship,
-				index: positionsCopy[position].index,
-				status: status,
-			};
+			const status = getPosition(position).ship === null ? 'missed' : 'hit';
+			updateAfterAttack(status, position);
 			if (status === 'hit') {
 				getPosition(position).ship.hit(getPosition(position).index);
-				getVicinity(position).forEach((slot) => {
-					if (
-						getPosition(slot).ship === null &&
-						getPosition(slot).status === 'available'
-					) {
-						positionsCopy[slot] = {
-							ship: positionsCopy[slot].ship,
-							index: positionsCopy[slot].index,
-							status: 'unavailable',
-						};
-					}
-				});
+				if (getPosition(position).ship.isSunk()) {
+					updateAfterSunkShip(getPosition(position).ship);
+				}
 			}
-			positions = positionsCopy;
 			return status;
 		}
 		return null;
