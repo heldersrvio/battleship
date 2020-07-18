@@ -27,7 +27,12 @@ const DOM = ((doc) => {
 			if (position.ship !== null) {
 				square.classList.add('ship');
 			}
-			if (computerIsOpponent && turn && !opponentGameboard.allShipsSunk()) {
+			if (
+				computerIsOpponent &&
+				turn &&
+				!opponentGameboard.allShipsSunk() &&
+				!selfGameboard.allShipsSunk()
+			) {
 				square.addEventListener('click', (event) => {
 					if (opponentGameboard.receiveAttack(index) !== null) {
 						clearBoard(id);
