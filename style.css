@@ -82,7 +82,7 @@ body {
     justify-content: center;
 }
 
-.option-button {
+.option-button, #submit-button {
     font-family: 'Press Start 2P', cursive;
     color: rgb(0, 131, 22);
     font-size: 30px;
@@ -94,7 +94,7 @@ body {
     text-shadow: 0px 0px 20px rgb(0, 235, 39);
 }
 
-#won-message, #lost-message {
+#won-message, #lost-message, #turn-message {
     margin-top: 20px;
     font-size: 25px;
 }
@@ -106,4 +106,45 @@ body {
 #pass-device-message {
     margin-top: 20%;
     font-size: 25px;
+}
+
+#name-inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+form {
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 25px;
+}
+
+input {
+    background-color: transparent; 
+    font-size: 17px;
+    font-family: 'Press Start 2P', cursive;
+    color: rgb(0, 235, 39);
+    margin-right: 20px;
+}
+
+input:valid {
+    border: 1pt solid rgb(0, 235, 39);
+}
+
+input:invalid {
+    border: 1pt solid red;
+}
+
+#submit-button {
+    margin-top: 60px;
+}
+
+#submit-button:hover {
+    color: rgb(0, 235, 39);
 }
