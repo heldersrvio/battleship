@@ -20,7 +20,7 @@ const DOM = ((doc) => {
 		options.id = 'options';
 		const option1 = doc.createElement('button');
 		option1.classList.add('option-button');
-		option1.textContent = 'Play against computer';
+		option1.textContent = 'Play against the computer';
 		option1.addEventListener('click', () => {
 			clearOptionScreen();
 			playAgainstComputer();
@@ -41,10 +41,13 @@ const DOM = ((doc) => {
 		body.removeChild(doc.getElementById('options'));
 	};
 
-	const renderGameOverMessage = (won) => {
+	const renderGameOverMessage = (won, name) => {
 		const message = doc.createElement('div');
 		const span = doc.createElement('span');
-		if (won) {
+		if (name !== null) {
+			message.id = 'won-message';
+			span.textContent = `${name} won!`;
+		} else if (won) {
 			message.id = 'won-message';
 			span.textContent = 'You won!';
 		} else {
@@ -55,13 +58,28 @@ const DOM = ((doc) => {
 		body.appendChild(message);
 	};
 
+	const renderPassDeviceScreen = () => {
+		const passDevice = doc.createElement('div');
+		passDevice.id = 'pass-device-message';
+		const span = doc.createElement('span');
+		span.textContent = 'Pass the device...';
+		passDevice.appendChild(span);
+		body.appendChild(passDevice);
+	};
+
+	const clearPassDeviceScreen = () => {
+		body.removeChild(doc.getElementById('pass-device-message'));
+	};
+
 	const renderBoard = (
 		id,
 		opponentGameboard,
 		selfGameboard,
 		computerIsOpponent,
 		turn,
-		computersTurn
+		computersTurn,
+		selfName,
+		opponentName
 	) => {
 		const gameboardsContainer =
 			doc.getElementById('gameboards-container') || doc.createElement('div');
@@ -87,8 +105,8 @@ const DOM = ((doc) => {
 				!selfGameboard.allShipsSunk()
 			) {
 				square.addEventListener('click', (event) => {
-					if (opponentGameboard.receiveAttack(index) !== null) {
-						computersTurn();
+					let receivedAttack = opponentGameboard.receiveAttack(index);
+					if (receivedAttack === 'hit') {
 						clearBoard('gameboard-one');
 						renderBoard(
 							'gameboard-one',
@@ -96,7 +114,9 @@ const DOM = ((doc) => {
 							opponentGameboard,
 							!computerIsOpponent,
 							!turn,
-							() => {}
+							() => {},
+							opponentName,
+							selfName
 						);
 						clearBoard(id);
 						renderBoard(
@@ -105,13 +125,97 @@ const DOM = ((doc) => {
 							selfGameboard,
 							computerIsOpponent,
 							turn,
-							computersTurn
+							computersTurn,
+							selfName,
+							opponentName
 						);
 						if (opponentGameboard.allShipsSunk()) {
-							renderGameOverMessage(true);
+							renderGameOverMessage(true, null);
 						} else if (selfGameboard.allShipsSunk()) {
-							renderGameOverMessage(false);
+							renderGameOverMessage(false, null);
 						}
+					} else if (receivedAttack !== null) {
+						computersTurn();
+						clearBoard('gameboard-one');
+						renderBoard(
+							'gameboard-one',
+							selfGameboard,
+							opponentGameboard,
+							!computerIsOpponent,
+							!turn,
+							() => {},
+							opponentName,
+							selfName
+						);
+						clearBoard(id);
+						renderBoard(
+							id,
+							opponentGameboard,
+							selfGameboard,
+							computerIsOpponent,
+							turn,
+							computersTurn,
+							selfName,
+							opponentName
+						);
+						if (opponentGameboard.allShipsSunk()) {
+							renderGameOverMessage(true, null);
+						} else if (selfGameboard.allShipsSunk()) {
+							renderGameOverMessage(true, null);
+						}
+					}
+				});
+			} else if (
+				computersTurn === null &&
+				!opponentGameboard.allShipsSunk() &&
+				!selfGameboard.allShipsSunk()
+			) {
+				square.addEventListener('click', (event) => {
+					let receivedAttack = opponentGameboard.receiveAttack(index);
+					if (receivedAttack === 'hit') {
+						clearBoard(id);
+						renderBoard(
+							id,
+							opponentGameboard,
+							selfGameboard,
+							computerIsOpponent,
+							turn,
+							computersTurn,
+							selfName,
+							opponentName
+						);
+						if (opponentGameboard.allShipsSunk()) {
+							renderGameOverMessage(true, opponentName);
+						} else if (selfGameboard.allShipsSunk()) {
+							renderGameOverMessage(false, selfName);
+						}
+					} else if (receivedAttack !== null) {
+						clearBoard(id);
+						renderBoard(
+							id,
+							opponentGameboard,
+							selfGameboard,
+							computerIsOpponent,
+							turn,
+							computersTurn,
+							selfName,
+							opponentName
+						);
+						clearBoard(id);
+						renderPassDeviceScreen();
+						setTimeout(() => {
+							clearPassDeviceScreen();
+							renderBoard(
+								id === 'gameboard-one' ? 'gameboard-two' : 'gameboard-one',
+								selfGameboard,
+								opponentGameboard,
+								false,
+								turn,
+								null,
+								opponentName,
+								selfName
+							);
+						}, 5000);
 					}
 				});
 			}

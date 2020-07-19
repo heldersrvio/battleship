@@ -64,14 +64,34 @@ const GameLoop = (againstComputer, player1Name, player2Name) => {
 				gameboard2,
 				false,
 				false,
-				() => {}
+				() => {},
+				player1.name,
+				player2.name
 			);
 
-			DOM.renderBoard('gameboard-two', gameboard2, gameboard1, true, true, () =>
-				gameboard1.receiveAttack(player2.randomMove(gameboard1))
+			DOM.renderBoard(
+				'gameboard-two',
+				gameboard2,
+				gameboard1,
+				true,
+				true,
+				() => gameboard1.receiveAttack(player2.randomMove(gameboard1)),
+				player2.name,
+				player1.name
 			);
 		},
-		() => {}
+		() => {
+			DOM.renderBoard(
+				'gameboard-two',
+				gameboard2,
+				gameboard1,
+				false,
+				true,
+				null,
+				player2.name,
+				player1Name
+			);
+		}
 	);
 };
 
