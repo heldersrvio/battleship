@@ -56,16 +56,21 @@ const GameLoop = (againstComputer, player1Name, player2Name) => {
 
 	DOM.renderTitle();
 
-	DOM.renderBoard('gameboard-two', gameboard2, gameboard1, true, true, () =>
-		gameboard1.receiveAttack(player2.randomMove(gameboard1))
-	);
+	DOM.renderOptionScreen(
+		() => {
+			DOM.renderBoard(
+				'gameboard-one',
+				gameboard1,
+				gameboard2,
+				false,
+				false,
+				() => {}
+			);
 
-	DOM.renderBoard(
-		'gameboard-one',
-		gameboard1,
-		gameboard2,
-		false,
-		false,
+			DOM.renderBoard('gameboard-two', gameboard2, gameboard1, true, true, () =>
+				gameboard1.receiveAttack(player2.randomMove(gameboard1))
+			);
+		},
 		() => {}
 	);
 };

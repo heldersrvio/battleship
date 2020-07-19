@@ -15,6 +15,46 @@ const DOM = ((doc) => {
 		body.appendChild(title);
 	};
 
+	const renderOptionScreen = (playAgainstComputer, playAgainstSomeoneElse) => {
+		const options = doc.createElement('div');
+		options.id = 'options';
+		const option1 = doc.createElement('button');
+		option1.classList.add('option-button');
+		option1.textContent = 'Play against computer';
+		option1.addEventListener('click', () => {
+			clearOptionScreen();
+			playAgainstComputer();
+		});
+		const option2 = doc.createElement('button');
+		option2.classList.add('option-button');
+		option2.textContent = 'Play against someone else';
+		option2.addEventListener('click', () => {
+			clearOptionScreen();
+			playAgainstSomeoneElse();
+		});
+		options.appendChild(option1);
+		options.appendChild(option2);
+		body.appendChild(options);
+	};
+
+	const clearOptionScreen = () => {
+		body.removeChild(doc.getElementById('options'));
+	};
+
+	const renderGameOverMessage = (won) => {
+		const message = doc.createElement('div');
+		const span = doc.createElement('span');
+		if (won) {
+			message.id = 'won-message';
+			span.textContent = 'You won!';
+		} else {
+			message.id = 'lost-message';
+			span.textContent = 'You lost';
+		}
+		message.appendChild(span);
+		body.appendChild(message);
+	};
+
 	const renderBoard = (
 		id,
 		opponentGameboard,
@@ -48,15 +88,6 @@ const DOM = ((doc) => {
 			) {
 				square.addEventListener('click', (event) => {
 					if (opponentGameboard.receiveAttack(index) !== null) {
-						clearBoard(id);
-						renderBoard(
-							id,
-							opponentGameboard,
-							selfGameboard,
-							computerIsOpponent,
-							turn,
-							computersTurn
-						);
 						computersTurn();
 						clearBoard('gameboard-one');
 						renderBoard(
@@ -67,6 +98,20 @@ const DOM = ((doc) => {
 							!turn,
 							() => {}
 						);
+						clearBoard(id);
+						renderBoard(
+							id,
+							opponentGameboard,
+							selfGameboard,
+							computerIsOpponent,
+							turn,
+							computersTurn
+						);
+						if (opponentGameboard.allShipsSunk()) {
+							renderGameOverMessage(true);
+						} else if (selfGameboard.allShipsSunk()) {
+							renderGameOverMessage(false);
+						}
 					}
 				});
 			}
@@ -80,6 +125,8 @@ const DOM = ((doc) => {
 		clearBoard,
 		renderBoard,
 		renderTitle,
+		renderOptionScreen,
+		clearOptionScreen,
 	};
 })(document);
 
