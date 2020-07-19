@@ -101,3 +101,8 @@ body {
 #lost-message {
     color: red;
 }
+
+#pass-device-message {
+    margin-top: 20%;
+    font-size: 25px;
+}
