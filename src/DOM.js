@@ -58,6 +58,64 @@ const DOM = ((doc) => {
 		body.appendChild(message);
 	};
 
+	const renderNameInput = (callback) => {
+		const form = doc.createElement('form');
+		form.id = 'name-inputs-form';
+		const nameInputs = doc.createElement('div');
+		nameInputs.id = 'name-inputs';
+		const label1 = doc.createElement('label');
+		label1.for = 'name1';
+		label1.textContent = 'Player 1: ';
+		nameInputs.appendChild(label1);
+		const name1 = doc.createElement('input');
+		name1.type = 'text';
+		name1.id = 'name1';
+		name1.required = true;
+		nameInputs.appendChild(name1);
+		const label2 = doc.createElement('label');
+		label2.for = 'name2';
+		label2.textContent = 'Player 2: ';
+		nameInputs.appendChild(label2);
+		const name2 = doc.createElement('input');
+		name2.type = 'text';
+		name2.id = 'name2';
+		name2.required = true;
+		nameInputs.appendChild(name2);
+		form.appendChild(nameInputs);
+
+		const submit = doc.createElement('input');
+		submit.type = 'submit';
+		submit.id = 'submit-button';
+		submit.addEventListener('click', (e) => {
+			e.preventDefault();
+			const name1 = doc.getElementById('name1');
+			const name2 = doc.getElementById('name2');
+			if (name1.checkValidity() && name2.checkValidity()) {
+				callback(name1.value, name2.value);
+			}
+		});
+		form.appendChild(submit);
+
+		body.appendChild(form);
+	};
+
+	const clearNameInput = () => {
+		body.removeChild(doc.querySelector('form'));
+	};
+
+	const renderTurnMessage = (name) => {
+		const turnMessage = doc.createElement('div');
+		turnMessage.id = 'turn-message';
+		const span = doc.createElement('span');
+		span.textContent = `${name}'s turn`;
+		turnMessage.appendChild(span);
+		body.appendChild(turnMessage);
+	};
+
+	const clearTurnMessage = () => {
+		body.removeChild(doc.getElementById('turn-message'));
+	};
+
 	const renderPassDeviceScreen = () => {
 		const passDevice = doc.createElement('div');
 		passDevice.id = 'pass-device-message';
@@ -135,7 +193,19 @@ const DOM = ((doc) => {
 							renderGameOverMessage(false, null);
 						}
 					} else if (receivedAttack !== null) {
-						computersTurn();
+						while (computersTurn() === 'hit') {
+							clearBoard('gameboard-one');
+							renderBoard(
+								'gameboard-one',
+								selfGameboard,
+								opponentGameboard,
+								!computerIsOpponent,
+								!turn,
+								() => {},
+								opponentName,
+								selfName
+							);
+						}
 						clearBoard('gameboard-one');
 						renderBoard(
 							'gameboard-one',
@@ -161,7 +231,7 @@ const DOM = ((doc) => {
 						if (opponentGameboard.allShipsSunk()) {
 							renderGameOverMessage(true, null);
 						} else if (selfGameboard.allShipsSunk()) {
-							renderGameOverMessage(true, null);
+							renderGameOverMessage(false, null);
 						}
 					}
 				});
@@ -173,6 +243,7 @@ const DOM = ((doc) => {
 				square.addEventListener('click', (event) => {
 					let receivedAttack = opponentGameboard.receiveAttack(index);
 					if (receivedAttack === 'hit') {
+						clearTurnMessage();
 						clearBoard(id);
 						renderBoard(
 							id,
@@ -188,8 +259,11 @@ const DOM = ((doc) => {
 							renderGameOverMessage(true, opponentName);
 						} else if (selfGameboard.allShipsSunk()) {
 							renderGameOverMessage(false, selfName);
+						} else {
+							renderTurnMessage(opponentName);
 						}
 					} else if (receivedAttack !== null) {
+						clearTurnMessage();
 						clearBoard(id);
 						renderBoard(
 							id,
@@ -201,6 +275,8 @@ const DOM = ((doc) => {
 							selfName,
 							opponentName
 						);
+						renderTurnMessage(opponentName);
+						clearTurnMessage();
 						clearBoard(id);
 						renderPassDeviceScreen();
 						setTimeout(() => {
@@ -215,6 +291,7 @@ const DOM = ((doc) => {
 								opponentName,
 								selfName
 							);
+							renderTurnMessage(selfName);
 						}, 5000);
 					}
 				});
@@ -231,6 +308,9 @@ const DOM = ((doc) => {
 		renderTitle,
 		renderOptionScreen,
 		clearOptionScreen,
+		renderNameInput,
+		clearNameInput,
+		renderTurnMessage,
 	};
 })(document);
 

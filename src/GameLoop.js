@@ -64,7 +64,9 @@ const GameLoop = (againstComputer, player1Name, player2Name) => {
 				gameboard2,
 				false,
 				false,
-				() => {},
+				() => {
+					return null;
+				},
 				player1.name,
 				player2.name
 			);
@@ -81,16 +83,20 @@ const GameLoop = (againstComputer, player1Name, player2Name) => {
 			);
 		},
 		() => {
-			DOM.renderBoard(
-				'gameboard-two',
-				gameboard2,
-				gameboard1,
-				false,
-				true,
-				null,
-				player2.name,
-				player1Name
-			);
+			DOM.renderNameInput((name1, name2) => {
+				DOM.clearNameInput();
+				DOM.renderBoard(
+					'gameboard-two',
+					gameboard2,
+					gameboard1,
+					false,
+					true,
+					null,
+					name2,
+					name1
+				);
+				DOM.renderTurnMessage(name1);
+			});
 		}
 	);
 };
