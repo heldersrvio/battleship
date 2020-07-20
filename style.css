@@ -204,6 +204,7 @@ input:invalid {
 
     input {
         margin-bottom: 50px;
+        margin-left: 20px;
     }
 
     #pass-device-message {
@@ -223,5 +224,9 @@ input:invalid {
 
     .option-button, #submit-button, #done-button {
         font-size: 20px;
+    }
+
+    .option-button {
+        margin-bottom: 25px;
     }
 }
