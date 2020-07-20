@@ -185,7 +185,7 @@ input:invalid {
     top: 0%;
     left: 0%;
 }
-@media (max-width: 720px) {
+@media only screen and (max-width: 720px) {
     body {
         font-size: 35px;
     }
