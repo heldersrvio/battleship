@@ -92,25 +92,25 @@ const Gameboard = () => {
 		const positionsCopy = positions.slice(0);
 		let invalidRange = false;
 		if (positionRange.length !== ship.length) {
-			return;
+			return false;
 		}
 		if (positionRange.length === 0) {
-			return;
+			return false;
 		}
 		positionRange.forEach((position) => {
 			if (getPosition(position).ship !== null) {
 				invalidRange = true;
-				return;
+				return false;
 			}
 			getVicinity(position).forEach((vicinityPosition) => {
 				if (getPosition(vicinityPosition).ship !== null) {
 					invalidRange = true;
-					return;
+					return false;
 				}
 			});
 		});
 		if (invalidRange) {
-			return;
+			return false;
 		}
 		positionRange.forEach((position, index) => {
 			positionsCopy[position] = {
@@ -120,6 +120,7 @@ const Gameboard = () => {
 			};
 		});
 		positions = positionsCopy;
+		return true;
 	};
 
 	const receiveAttack = (position) => {

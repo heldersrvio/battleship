@@ -25,26 +25,6 @@ body {
     justify-content: center;
 }
 
-@media (max-width: 720px) {
-    body {
-        font-size: 35px;
-    }
-
-    #gameboards-container {
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    .gameboard {
-        width: 160px;
-        height: 160px;
-        display: flex;
-        flex-wrap: wrap;
-        margin: 10px;
-    }
-}
-
 .gameboard {
 	width: 320px;
 	height: 320px;
@@ -54,9 +34,10 @@ body {
 }
 
 .cell {
+    position: relative;
 	width: 9.375%;
 	height: 9.375%;
-	border: 1px solid rgb(0, 235, 39);
+    border: 1px solid rgb(0, 235, 39);
 }
 
 .available {
@@ -70,7 +51,6 @@ body {
 .hit {
 	background-color: rgb(0, 235, 39);
 }
-
 .missed {
 	background-color: rgba(221, 150, 150, 0.596);
 }
@@ -82,10 +62,19 @@ body {
     justify-content: center;
 }
 
-.option-button, #submit-button {
+.option-button, #submit-button, #done-button {
     font-family: 'Press Start 2P', cursive;
     color: rgb(0, 131, 22);
     font-size: 30px;
+    border: none;
+    background-color: transparent;
+}
+
+#play-again-button {
+    font-family: 'Press Start 2P', cursive;
+    color: rgb(0, 131, 22);
+    font-size: 25px;
+    margin-top: 20px;
     border: none;
     background-color: transparent;
 }
@@ -141,10 +130,83 @@ input:invalid {
     border: 1pt solid red;
 }
 
-#submit-button {
+#submit-button, #done-button {
     margin-top: 60px;
 }
 
-#submit-button:hover {
+#submit-button:hover, #done-button:hover, #play-again-button:hover {
     color: rgb(0, 235, 39);
+}
+
+.draggable-ship-1, .draggable-ship-2, .draggable-ship-3, .draggable-ship-4 {
+    background-color: rgb(0, 235, 39);
+    position: absolute;
+    cursor: move;
+}
+
+.draggable-ship-1 {
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+}
+
+.draggable-ship-2.vertical {
+    width: 100%;
+    height: 207%;
+    top: 0%;
+    left: 0%;
+}
+
+.draggable-ship-2.horizontal {
+    width: 207%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+}
+
+.draggable-ship-3.vertical {
+    width: 100%;
+    height: 315%;
+    top: 0%;
+    left: 0%;
+}
+
+.draggable-ship-3.horizontal {
+    width: 315%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+}
+
+.draggable-ship-4.vertical {
+    width: 100%;
+    height: 420%;
+    top: 0%;
+    left: 0%;
+}
+@media (max-width: 720px) {
+    body {
+        font-size: 35px;
+    }
+
+    #gameboards-container {
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    #name-inputs {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    input {
+        margin-bottom: 50px;
+    }
+
+    #pass-device-message {
+        margin-top: 35%;
+    }
 }
