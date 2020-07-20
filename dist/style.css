@@ -209,4 +209,19 @@ input:invalid {
     #pass-device-message {
         margin-top: 35%;
     }
+
+    #options {
+        margin-top: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    #title {
+        font-size: 35px;
+    }
+
+    .option-button, #submit-button, #done-button {
+        font-size: 20px;
+    }
 }
